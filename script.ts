@@ -27,6 +27,17 @@ async function seed_database() {
       founded: 2003,
     },
   })
+  const game = await prisma.game.create({
+    data: {
+      title: 'call of duty',
+      publishedYear: new Date(2003, 10, 29),
+      publisherId: 1,
+      playableHours: 7,
+      platforms: {
+        connect: [{}],
+      },
+    },
+  })
   console.log(publisher)
   console.log(platform)
 }
@@ -51,7 +62,7 @@ async function get_platform(platformId: any) {
 
 // handle_async_func(seed_database)
 // handle_async_func(get_publisher)
-handle_async_func(get_platform, 1)
+// handle_async_func(get_platform, 1)
 
 // async function main() {
 //   const user = await prisma.user.create({
