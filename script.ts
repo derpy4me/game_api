@@ -2,83 +2,94 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 
-async function main() {
-  const user = await prisma.user.create({
+function handle_async_func(func: Function, args: any) {
+  func(args)
+    .then(async () => {
+      await prisma.$disconnect()
+    })
+    .catch(async (e: any) => {
+      console.error(e)
+      await prisma.$disconnect()
+      process.exit(1)
+    })
+}
+
+async function seed_database() {
+  const publisher = await prisma.publisher.create({
     data: {
-      name: 'Alice',
-      email: 'alice@prisma.io',
+      name: 'activision',
+      founded: 1979,
     },
   })
-  console.log(user)
-}
-
-async function get_users() {
-  const users = await prisma.user.findMany()
-  console.log(users)
-}
-
-async function create_bob() {
-  const user = await prisma.user.create({
+  const platform = await prisma.platform.create({
     data: {
-      name: 'Bob',
-      email: 'bob@prisma.io',
-      posts: {
-        create: {
-          title: 'Hello Bob',
-        },
-      },
+      name: 'steam',
+      founded: 2003,
     },
   })
-  console.log(user)
+  console.log(publisher)
+  console.log(platform)
 }
 
-async function get_users_with_posts() {
-  const users = await prisma.user.findMany({
-    include: {
-      posts: true,
+async function get_publisher(publisherId: any) {
+  const publisher = await prisma.publisher.findFirst({
+    where: {
+      id: publisherId,
     },
   })
-  console.dir(users, { depth: null })
+  console.log(publisher)
 }
 
-// main()
-//   .then(async () => {
-//     await prisma.$disconnect()
-//   })
-//   .catch(async (e) => {
-//     console.error(e)
-//     await prisma.$disconnect()
-//     process.exit(1)
-//   })
+async function get_platform(platformId: any) {
+  const platform = await prisma.platform.findFirst({
+    where: {
+      id: platformId,
+    },
+  })
+  console.log(platform)
+}
 
-// get_users()
-//   .then(async () => {
-//     await prisma.$disconnect()
-//   })
-//   .catch(async (e) => {
-//     console.error(e)
-//     await prisma.$disconnect()
-//     process.exit(1)
-//   })
+// handle_async_func(seed_database)
+// handle_async_func(get_publisher)
+handle_async_func(get_platform, 1)
 
-// create_bob()
-//   .then(async () => {
-//     await prisma.$disconnect()
+// async function main() {
+//   const user = await prisma.user.create({
+//     data: {
+//       name: 'Alice',
+//       email: 'alice@prisma.io',
+//     },
 //   })
-//   .catch(async (e) => {
-//     console.error(e)
-//     await prisma.$disconnect()
-//     process.exit(1)
-//   })
+//   console.log(user)
+// }
 
-// get_users_with_posts()
-//   .then(async () => {
-//     await prisma.$disconnect()
+// async function get_users() {
+//   const users = await prisma.user.findMany()
+//   console.log(users)
+// }
+
+// async function create_bob() {
+//   const user = await prisma.user.create({
+//     data: {
+//       name: 'Bob',
+//       email: 'bob@prisma.io',
+//       posts: {
+//         create: {
+//           title: 'Hello Bob',
+//         },
+//       },
+//     },
 //   })
-//   .catch(async (e) => {
-//     console.error(e)
-//     await prisma.$disconnect()
-//     process.exit(1)
+//   console.log(user)
+// }
+
+// async function get_users_with_posts() {
+//   const users = await prisma.user.findMany({
+//     include: {
+//       posts: true,
+//     },
 //   })
+//   console.dir(users, { depth: null })
+// }
 
 // ```npx prisma studio``` GUI to view and edit database.

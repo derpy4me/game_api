@@ -10,18 +10,37 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id    Int     @id @default(autoincrement())
-  email String  @unique
-  name  String?
-  posts Post[]
+model Publisher {
+  id      Int    @id @default(autoincrement())
+  name    String @unique
+  founded Int
+
+  Game Game[]
 }
 
-model Post {
-  id        Int     @id @default(autoincrement())
-  title     String
-  content   String?
-  published Boolean @default(false)
-  author    User    @relation(fields: [authorId], references: [id])
-  authorId  Int
+model Game {
+  id            Int            @id @default(autoincrement())
+  title         String         @unique
+  publishedYear DateTime
+  publisher     Publisher      @relation(fields: [publisherId], references: [id])
+  publisherId   Int
+  playableHours Int
+  platforms     GamePlatform[]
+}
+
+model GamePlatform {
+  game       Game     @relation(fields: [gameId], references: [id])
+  gameId     Int
+  platform   Platform @relation(fields: [platformId], references: [id])
+  platformId Int
+  added      DateTime
+
+  @@id([gameId, platformId])
+}
+
+model Platform {
+  id      Int            @id @default(autoincrement())
+  name    String
+  founded Int
+  games   GamePlatform[]
 }
