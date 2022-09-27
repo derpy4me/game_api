@@ -1,6 +1,7 @@
 import { gql } from 'apollo-server'
 import { prisma } from './db'
 import { DateTimeResolver } from 'graphql-scalars'
+import { platform } from 'os'
 
 const typeDefs = gql`
   scalar DateTime
@@ -15,14 +16,7 @@ const typeDefs = gql`
     id: ID!
     name: String!
     founded: Int!
-  }
-
-  type GamePlatform {
-    game: Game!
-    gameId: Int!
-    platform: Platform!
-    platformId: Int!
-    added: DateTime!
+    games: [Game]
   }
 
   type Game {
@@ -32,12 +26,13 @@ const typeDefs = gql`
     publisher: Publisher!
     publisherId: Int!
     playableHours: Int!
+    platforms: [Platform]
   }
 
   type Query {
-    # games: [Game]!
-    publishers: [Publisher]!
-    platforms: [Platform]!
+    games: [Game]
+    publishers: [Publisher]
+    platforms: [Platform]
   }
 
   # type Mutation {
@@ -48,11 +43,32 @@ const typeDefs = gql`
 
 const resolvers: any = {
   Query: {
-    publishers: (parent: any, args: any) => {
-      return prisma.publisher.findMany()
+    publishers: async (parent: any, args: any) => {
+      return await prisma.publisher.findMany()
     },
-    platforms: (parent: any, args: any) => {
-      return prisma.platform.findMany()
+    platforms: async (parent: any, args: any) => {
+      return await prisma.platform.findMany()
+    },
+    games: async (parent: any, args: any) => {
+      let games = await prisma.game.findMany({
+        include: {
+          publisher: { include: { Game: false } },
+          platforms: { include: { platform: true } },
+        },
+      })
+      return games.map((game) => {
+        return {
+          ...game,
+          platforms: game?.platforms.map((platform) => {
+            return {
+              id: platform.platformId,
+              name: platform.platform.name,
+              founded: platform.platform.founded,
+              added: platform.added,
+            }
+          }),
+        }
+      })
     },
   },
 }

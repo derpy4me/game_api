@@ -1,8 +1,9 @@
 import { PrismaClient } from '@prisma/client'
+import { platform } from 'os'
 
 const prisma = new PrismaClient()
 
-function handle_async_func(func: Function, args: any) {
+function handle_async_func(func: Function, args: any | null) {
   func(args)
     .then(async () => {
       await prisma.$disconnect()
@@ -34,7 +35,7 @@ async function seed_database() {
       publisherId: 1,
       playableHours: 7,
       platforms: {
-        connect: [{}],
+        create: { added: new Date(2003, 10, 29), platformId: 1 },
       },
     },
   })
@@ -60,9 +61,34 @@ async function get_platform(platformId: any) {
   console.log(platform)
 }
 
-// handle_async_func(seed_database)
+async function get_game(gameId: any) {
+  const game = await prisma.game.findFirst({
+    where: {
+      id: gameId,
+    },
+    include: {
+      platforms: { include: { platform: true } },
+    },
+  })
+  const result = {
+    ...game,
+    platforms: game?.platforms.map((platform) => {
+      const a_platform = {
+        id: platform.platformId,
+        name: platform.platform.name,
+        founded: platform.platform.founded,
+        added: platform.added,
+      }
+      return a_platform
+    }),
+  }
+  console.log(result)
+}
+
+// handle_async_func(seed_database, null)
 // handle_async_func(get_publisher)
 // handle_async_func(get_platform, 1)
+handle_async_func(get_game, 1)
 
 // async function main() {
 //   const user = await prisma.user.create({

@@ -23,6 +23,9 @@
     "target": "es6"
   },
   "scripts": {
-    "start": "ts-node-esm src/index.ts"
+    "start": "ts-node-esm src/index.ts",
+    "resetData": "npx prisma migrate reset",
+    "prismaMigrate": "npx prisma migrate dev",
+    "seedScript": "ts-node-esm script.ts"
   }
 }
