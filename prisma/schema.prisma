@@ -21,7 +21,7 @@ model Publisher {
 model Game {
   id            Int            @id @default(autoincrement())
   title         String         @unique
-  publishedYear DateTime
+  publishedYear Int
   publisher     Publisher      @relation(fields: [publisherId], references: [id])
   publisherId   Int
   playableHours Int
@@ -33,7 +33,7 @@ model GamePlatform {
   gameId     Int
   platform   Platform @relation(fields: [platformId], references: [id])
   platformId Int
-  added      DateTime
+  added      Int
 
   @@id([gameId, platformId])
 }

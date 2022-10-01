@@ -39,11 +39,11 @@ function seed_database() {
         const game = yield prisma.game.create({
             data: {
                 title: 'call of duty',
-                publishedYear: new Date(2003, 10, 29),
+                publishedYear: 2003,
                 publisherId: 1,
                 playableHours: 7,
                 platforms: {
-                    create: { added: new Date(2003, 10, 29), platformId: 1 },
+                    create: { added: 2003, platformId: 1 },
                 },
             },
         });
@@ -93,10 +93,10 @@ function get_game(gameId) {
         console.log(result);
     });
 }
-// handle_async_func(seed_database, null)
+handle_async_func(seed_database, null);
 // handle_async_func(get_publisher)
 // handle_async_func(get_platform, 1)
-handle_async_func(get_game, 1);
+// handle_async_func(get_game, 1)
 // async function main() {
 //   const user = await prisma.user.create({
 //     data: {

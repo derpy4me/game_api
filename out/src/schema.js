@@ -13,7 +13,7 @@ exports.resolvers = exports.typeDefs = void 0;
 const apollo_server_1 = require("apollo-server");
 const db_1 = require("./db");
 const typeDefs = (0, apollo_server_1.gql) `
-  scalar DateTime
+  # scalar DateTime
 
   type Publisher {
     id: ID!
@@ -28,14 +28,21 @@ const typeDefs = (0, apollo_server_1.gql) `
     games: [Game]
   }
 
+  type GamePlatformLink {
+    id: Int
+    name: String
+    founded: Int
+    added: Int
+  }
+
   type Game {
     id: ID!
     title: String!
-    publishedYear: DateTime!
+    publishedYear: Int!
     publisher: Publisher!
     publisherId: Int!
     playableHours: Int!
-    platforms: [Platform]
+    platforms: [GamePlatformLink]
   }
 
   type Query {
@@ -44,10 +51,68 @@ const typeDefs = (0, apollo_server_1.gql) `
     platforms: [Platform]
   }
 
-  # type Mutation {
-  #   createDraft(content: String, title: String!): Post!
-  #   publish(id: ID!): Post
-  # }
+  input DeleteGameInput {
+    id: Int
+    title: String
+  }
+  input UpdateGameInput {
+    id: Int!
+    title: String
+    publishedYear: Int
+    publisherId: Int
+    playableHours: Int
+    platforms: [GamePlatformLinkInput]
+  }
+
+  input DeletePlatformInput {
+    id: Int
+    name: String
+  }
+  input UpdatePlatformInput {
+    id: Int
+    name: String
+    founded: Int
+  }
+
+  input DeletePublisherInput {
+    id: Int
+    name: String
+  }
+  input UpdatePublisherInput {
+    id: Int!
+    name: String
+    founded: Int
+  }
+
+  input GamePlatformLinkInput {
+    added: Int!
+    platformId: Int!
+  }
+  input removeGameFromPlatformInput {
+    gameId: Int!
+    platformId: Int!
+  }
+
+  type Mutation {
+    createPublisher(name: String!, founded: Int!): Publisher!
+    updatePublisher(publisher: UpdatePublisherInput!): Publisher
+    deletePublisher(publisher: DeletePublisherInput!): Publisher
+
+    createPlatform(name: String!, founded: Int!): Platform!
+    updatePlatform(platform: UpdatePlatformInput!): Platform
+    deletePlatform(platform: DeletePlatformInput!): Platform
+
+    createGame(
+      title: String!
+      publishedYear: DateTime!
+      publisherId: Int!
+      playableHours: Int!
+      platforms: [GamePlatformLinkInput]
+    ): Game!
+    updateGame(game: UpdateGameInput!): Game
+    deleteGame(game: DeleteGameInput!): Game
+    removeGameFromPlatform(link: removeGameFromPlatformInput): Game
+  }
 `;
 exports.typeDefs = typeDefs;
 const resolvers = {
@@ -86,11 +151,49 @@ const resolvers = {
                 },
             });
         }),
+        updatePublisher: (parent, args) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield db_1.prisma.publisher.update({
+                where: {
+                    id: args.publisher.id,
+                },
+                data: {
+                    name: args.publisher.name,
+                    founded: args.publisher.founded,
+                },
+            });
+        }),
+        deletePublisher: (parent, args) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield db_1.prisma.publisher.delete({
+                where: {
+                    id: args.publisher.id,
+                    name: args.publisher.name,
+                },
+            });
+        }),
         createPlatform: (parent, args) => __awaiter(void 0, void 0, void 0, function* () {
             return yield db_1.prisma.platform.create({
                 data: {
                     name: args.name,
                     founded: args.founded,
+                },
+            });
+        }),
+        updatePlatform: (parent, args) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield db_1.prisma.publisher.update({
+                where: {
+                    id: args.publisher.id,
+                },
+                data: {
+                    name: args.publisher.name,
+                    founded: args.publisher.founded,
+                },
+            });
+        }),
+        deletePlatform: (parent, args) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield db_1.prisma.publisher.delete({
+                where: {
+                    id: args.publisher.id,
+                    name: args.publisher.name,
                 },
             });
         }),
@@ -101,6 +204,37 @@ const resolvers = {
                     publishedYear: args.publishedYear,
                     playableHours: args.playableHours,
                     publisherId: args.publisherId,
+                    platforms: {
+                        create: args.platforms,
+                    },
+                },
+            });
+        }),
+        updateGame: (parent, args) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield db_1.prisma.game.update({
+                where: {
+                    id: args.game.id,
+                },
+                data: {
+                    title: args.game.title,
+                    publishedYear: args.game.publishedYear,
+                    playableHours: args.game.playableHours,
+                    publisherId: args.publisherId,
+                },
+            });
+        }),
+        deleteGame: (parent, args) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield db_1.prisma.game.delete({
+                where: {
+                    id: args.game.id,
+                    title: args.game.title,
+                },
+            });
+        }),
+        removeGameFromPlatform: (parent, args) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield db_1.prisma.gamePlatform.delete({
+                where: {
+                    gameId_platformId: args.link.gameId,
                 },
             });
         }),

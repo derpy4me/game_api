@@ -9,7 +9,7 @@ CREATE TABLE "Publisher" (
 CREATE TABLE "Game" (
     "id" INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT,
     "title" TEXT NOT NULL,
-    "publishedYear" DATETIME NOT NULL,
+    "publishedYear" INTEGER NOT NULL,
     "publisherId" INTEGER NOT NULL,
     "playableHours" INTEGER NOT NULL,
     CONSTRAINT "Game_publisherId_fkey" FOREIGN KEY ("publisherId") REFERENCES "Publisher" ("id") ON DELETE RESTRICT ON UPDATE CASCADE
@@ -19,7 +19,7 @@ CREATE TABLE "Game" (
 CREATE TABLE "GamePlatform" (
     "gameId" INTEGER NOT NULL,
     "platformId" INTEGER NOT NULL,
-    "added" DATETIME NOT NULL,
+    "added" INTEGER NOT NULL,
 
     PRIMARY KEY ("gameId", "platformId"),
     CONSTRAINT "GamePlatform_gameId_fkey" FOREIGN KEY ("gameId") REFERENCES "Game" ("id") ON DELETE RESTRICT ON UPDATE CASCADE,
