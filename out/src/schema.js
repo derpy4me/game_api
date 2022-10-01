@@ -9,7 +9,7 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.typeDefs = exports.resolvers = void 0;
+exports.resolvers = exports.typeDefs = void 0;
 const apollo_server_1 = require("apollo-server");
 const db_1 = require("./db");
 const typeDefs = (0, apollo_server_1.gql) `
@@ -74,6 +74,34 @@ const resolvers = {
                             added: platform.added,
                         };
                     }) });
+            });
+        }),
+    },
+    Mutation: {
+        createPublisher: (parent, args) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield db_1.prisma.publisher.create({
+                data: {
+                    name: args.name,
+                    founded: args.founded,
+                },
+            });
+        }),
+        createPlatform: (parent, args) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield db_1.prisma.platform.create({
+                data: {
+                    name: args.name,
+                    founded: args.founded,
+                },
+            });
+        }),
+        createGame: (parent, args) => __awaiter(void 0, void 0, void 0, function* () {
+            return yield db_1.prisma.game.create({
+                data: {
+                    title: args.title,
+                    publishedYear: args.publishedYear,
+                    playableHours: args.playableHours,
+                    publisherId: args.publisherId,
+                },
             });
         }),
     },
