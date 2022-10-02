@@ -5,29 +5,33 @@ generator client {
   provider = "prisma-client-js"
 }
 
+// Get the type of database and where it is located.
 datasource db {
   provider = "sqlite"
   url      = env("DATABASE_URL")
 }
 
+// The model to build the Publisher table in the database.
 model Publisher {
   id      Int    @id @default(autoincrement())
   name    String @unique
   founded Int
 
-  Game Game[]
+  Game Game[] // Implicit relationship between games that have the Publisher's id.
 }
 
+// The game model.
 model Game {
-  id            Int            @id @default(autoincrement())
-  title         String         @unique
+  id            Int            @id @default(autoincrement()) // Unique id incrementing every time a game is created.
+  title         String         @unique // All titles have to be unique
   publishedYear Int
-  publisher     Publisher      @relation(fields: [publisherId], references: [id])
+  publisher     Publisher      @relation(fields: [publisherId], references: [id]) // We can access the publisher table
   publisherId   Int
   playableHours Int
   platforms     GamePlatform[]
 }
 
+// An explicit linking table between a game and a platform.
 model GamePlatform {
   game       Game     @relation(fields: [gameId], references: [id])
   gameId     Int
@@ -35,9 +39,10 @@ model GamePlatform {
   platformId Int
   added      Int
 
-  @@id([gameId, platformId])
+  @@id([gameId, platformId]) // The id for the table is a composite key
 }
 
+// The platform model.
 model Platform {
   id      Int            @id @default(autoincrement())
   name    String

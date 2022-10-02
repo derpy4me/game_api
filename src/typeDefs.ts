@@ -1,5 +1,7 @@
 import { gql } from 'apollo-server'
 
+// This is where we define objects for the GraphQL schemas. While similar to Prisma Models, they are only used in
+// GraphQL for determining the data the user needs to input.
 export default gql`
   type Publisher {
     id: ID!

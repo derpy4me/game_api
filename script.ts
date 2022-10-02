@@ -1,3 +1,4 @@
+// This script is simply used to test Prisma CRUD and seed the database.
 import { PrismaClient } from '@prisma/client'
 import { platform } from 'os'
 
@@ -86,10 +87,15 @@ async function get_game(gameId: any) {
   console.log(result)
 }
 
+// Uncomment the functions below to call the defined functions above
 handle_async_func(seed_database, null)
 // handle_async_func(get_publisher)
 // handle_async_func(get_platform, 1)
 // handle_async_func(get_game, 1)
+
+///////////////////////////////////////////////
+// Example function below
+///////////////////////////////////////////////
 
 // async function main() {
 //   const user = await prisma.user.create({
