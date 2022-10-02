@@ -20,8 +20,7 @@ for interaction with the Sqlite database allowing for CRUD operations. Typescrip
 
 ## Demonstration
 
-{Provide a link to your YouTube demonstration. It should be a 4-5 minute demo of the software running (starting the server and navigating through the web pages) and a walk-through of the code.}  
-[Software Demo Video](http://youtube.link.goes.here)
+[Software Demo Video](https://youtu.be/ETqRSjC2CkI)
 
 # Web Pages
 

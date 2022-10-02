@@ -99,10 +99,9 @@ export default {
       })
     },
     deletePlatform: async (parent: any, args: any) => {
-      return await prisma.publisher.delete({
+      return await prisma.platform.delete({
         where: {
-          id: args.publisher.id,
-          name: args.publisher.name,
+          id: args.platform.id,
         },
       })
     },
