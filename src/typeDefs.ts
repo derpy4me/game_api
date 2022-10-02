@@ -55,7 +55,6 @@ export default gql`
 
   input DeletePlatformInput {
     id: Int
-    name: String
   }
   input UpdatePlatformInput {
     id: Int
