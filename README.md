@@ -10,6 +10,7 @@ This GraphQL server contains four tables for storing video games, their publishe
 
 Ensure yarn has been installed on your computer. If yarn is not installed, click here [Install Yarn](https://classic.yarnpkg.com/lang/en/docs/install/#debian-stable)  
 In the project directory run `yarn` to install dependencies  
+Copy **example.env** to **.env**  
 Run `npx prisma generate` to get all variables for Prisma from .env  
 Scripts have been created for running the project. Run `yarn start` to initiate the server on **localhost:4000**  
 Navigating to the URL you will be introduced to Apollo's sandbox environment where Queries and Mutations will be available.
